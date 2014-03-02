@@ -54,8 +54,10 @@ public class MapActivity extends Activity {
 	 * TODO add info about the location
 	 */
 	private void pinMarker() {
-
-		map.addMarker(new MarkerOptions().position(target)).setTitle(
-				"Hello world");
+		Intent i = getIntent();
+		String name = i.getStringExtra("name");
+		String reason = i.getStringExtra("reason");
+		map.addMarker(new MarkerOptions().position(target).title(name)
+				.snippet(reason));
 	}
 }

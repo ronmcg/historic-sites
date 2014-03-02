@@ -63,6 +63,8 @@ public class MainActivity extends ListActivity implements
 		Intent i = new Intent(this, MapActivity.class);
 		i.putExtra("lat", sites.get(position).getLatitude());
 		i.putExtra("lon", sites.get(position).getLongitude());
+		i.putExtra("name", sites.get(position).getNameEn());
+		i.putExtra("reason", sites.get(position).getReasonEn());
 		startActivity(i);
 	}
 
