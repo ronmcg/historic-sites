@@ -94,6 +94,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		while (!cursor.isAfterLast()) {
 			HistoricSite hs = new HistoricSite();
 			hs.setNameEn(cursor.getString(1));
+			hs.setNameFr(cursor.getString(2));
+			hs.setPlaqueLoc(cursor.getString(3));
+			hs.setTown(cursor.getString(4));
+			hs.setProvince(cursor.getString(5));
+			hs.setReasonEn(cursor.getString(6));
+			hs.setReasonFr(cursor.getString(7));
+			hs.setLatitude(cursor.getFloat(8));
+			hs.setLongitude(cursor.getFloat(9));
 			siteList.add(hs);
 			cursor.moveToNext();
 		}

@@ -2,6 +2,8 @@
 *.apk
 *.ap_
 
+#leave out the api key for maps
+api_key.xml
 # Files for the Dalvik VM
 *.dex
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
@@ -20,6 +21,8 @@ import com.ronmadethis.historic.model.Parser;
 
 public class MainActivity extends ListActivity implements
 		ActionBar.OnNavigationListener {
+
+	private ArrayList<HistoricSite> sites;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +60,10 @@ public class MainActivity extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		// Intent i = new Intent(this, SiteActivity.class);
-		// i.putExtra("id", position + 1);
-		// startActivity(i);
+		Intent i = new Intent(this, MapActivity.class);
+		i.putExtra("lat", sites.get(position).getLatitude());
+		i.putExtra("lon", sites.get(position).getLongitude());
+		startActivity(i);
 	}
 
 	@Override
@@ -75,6 +79,17 @@ public class MainActivity extends ListActivity implements
 		return false;
 	}
 
+	/**
+	 * If this is the first time then we have to parse the data and put it in
+	 * the db before we can set the listview, if we've already done that then
+	 * just get all the names and set them as the lsitview.
+	 * 
+	 * It takes a long time to do all this parsing and adding to the db so I
+	 * should add a progress indicator
+	 * 
+	 * @author Ronnie
+	 * 
+	 */
 	private class ParseTask extends
 			AsyncTask<Void, Void, ArrayList<HistoricSite>> {
 
@@ -83,6 +98,7 @@ public class MainActivity extends ListActivity implements
 		@Override
 		protected ArrayList<HistoricSite> doInBackground(Void... voids) {
 			DataBaseHandler db = new DataBaseHandler(getBaseContext());
+			// check if the db has been setup already
 			if (!getSharedPreferences("default", 0).getBoolean("dataLoaded",
 					false)) {
 				AssetManager am = getResources().getAssets();
@@ -92,8 +108,10 @@ public class MainActivity extends ListActivity implements
 					ArrayList<HistoricSite> parsed = p.parseData(is);
 					for (int i = 0; i < parsed.size(); i++) {
 						db.addSite(parsed.get(i));
-						values.add(parsed.get(i).getNameEn());
+						values.add(parsed.get(i).getNameEn()); // for the
+																// listview
 					}
+					// save a bool so we know it's done
 					SharedPreferences pref = getSharedPreferences("default", 0);
 					SharedPreferences.Editor editor = pref.edit();
 					editor.putBoolean("dataLoaded", true);
@@ -102,7 +120,11 @@ public class MainActivity extends ListActivity implements
 					e.printStackTrace();
 				}
 			} else {
-				values = db.getAllNamesEn();
+				sites = db.getAll();
+				for (HistoricSite hs : sites) {
+					// for the listview
+					values.add(hs.getNameEn());
+				}
 			}
 			return null;
 		}
