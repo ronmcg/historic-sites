@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -96,6 +97,14 @@ public class MainActivity extends ListActivity implements
 			AsyncTask<Void, Void, ArrayList<HistoricSite>> {
 
 		private ArrayList<String> values = new ArrayList<String>();
+		ProgressDialog progress = new ProgressDialog(MainActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progress.setMessage("Please wait...");
+			progress.show();
+		}
 
 		@Override
 		protected ArrayList<HistoricSite> doInBackground(Void... voids) {
@@ -138,6 +147,9 @@ public class MainActivity extends ListActivity implements
 					getBaseContext(), android.R.layout.simple_list_item_1,
 					values);
 			setListAdapter(adapter);
+			if (progress.isShowing()) {
+				progress.dismiss();
+			}
 		}
 
 	}
