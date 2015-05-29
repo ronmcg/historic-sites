@@ -9,7 +9,6 @@ public class HistoricSite {
 	public HistoricSite(String nameEn, String nameFr, String street,
 			String plaqueLoc, String town, String province, String reasonEn,
 			String reasonFr, float latitude, float longitude) {
-		super();
 		this.nameEn = nameEn;
 		this.nameFr = nameFr;
 		this.street = street;
